@@ -1,0 +1,12 @@
+myConfig: Dropwizard Sample
+
+logging:
+  level: INFO
+
+server:
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 8080

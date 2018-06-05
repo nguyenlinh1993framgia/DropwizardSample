@@ -1,8 +1,11 @@
 package com.framgia.dropwizardsample.apirest;
 
 
+import com.codahale.metrics.annotation.Timed;
+import com.framgia.dropwizardsample.models.dao.IpAddressDao;
 import com.framgia.dropwizardsample.models.entities.IpAddress;
-import com.framgia.dropwizardsample.models.ipaddress.IpAddressModel;
+import io.dropwizard.hibernate.UnitOfWork;
+import org.hibernate.SessionFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -21,16 +24,17 @@ import java.util.List;
 @Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
 public class ApiResource {
-    private IpAddressModel ipAddressModel;
-    public ApiResource(){
-        super();
-        ipAddressModel = new IpAddressModel();
+    private IpAddressDao ipAddressDao;
+    public ApiResource(SessionFactory sessionFactory){
+        ipAddressDao = new IpAddressDao(sessionFactory);
     }
 
     @GET
     @Path("/list-ip-address")
+    @Timed
+    @UnitOfWork
     public Response listAllIpAddress() {
-        List<IpAddress> items = ipAddressModel.getAllIpAddess();
+        List<IpAddress> items = ipAddressDao.getAllIpAddress();
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setStatus(true);
         baseResponse.setData(items);
@@ -40,8 +44,10 @@ public class ApiResource {
 
     @POST
     @Path("/save-ip-address")
+    @Timed
+    @UnitOfWork
     public Response saveIpAddress(IpAddress ipAddress){
-        boolean success = ipAddressModel.saveIpAddress(ipAddress);
+        boolean success = ipAddressDao.saveIpAddress(ipAddress);
         BaseResponse baseResponse = new BaseResponse();
         List<String> messages = new ArrayList<>();
         if (success) {
@@ -61,8 +67,10 @@ public class ApiResource {
 
     @DELETE
     @Path("/delete-ip-address/{id}")
+    @Timed
+    @UnitOfWork
     public Response deleteIpAddress(@PathParam("id") long id){
-        IpAddress ipAddress = ipAddressModel.deleteIpAddress(id);
+        IpAddress ipAddress = ipAddressDao.deleteIpAddress(id);
         BaseResponse baseResponse = new BaseResponse();
         List<String> messages = new ArrayList<>();
         if (ipAddress!=null) {
@@ -82,8 +90,10 @@ public class ApiResource {
 
     @POST
     @Path("/update-ip-address")
+    @Timed
+    @UnitOfWork
     public Response updateIpAddress(IpAddress ipAddress){
-        boolean success = ipAddressModel.updateIpAddress(ipAddress);
+        boolean success = ipAddressDao.saveIpAddress(ipAddress);
         BaseResponse baseResponse = new BaseResponse();
         List<String> messages = new ArrayList<>();
         if (success) {

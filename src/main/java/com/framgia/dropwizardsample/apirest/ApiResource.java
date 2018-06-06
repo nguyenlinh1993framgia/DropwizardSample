@@ -4,6 +4,8 @@ package com.framgia.dropwizardsample.apirest;
 import com.codahale.metrics.annotation.Timed;
 import com.framgia.dropwizardsample.models.dao.IpAddressDao;
 import com.framgia.dropwizardsample.models.entities.IpAddress;
+import com.framgia.dropwizardsample.models.entities.User;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.SessionFactory;
 
